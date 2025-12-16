@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Author: 钉钉或微信pythontesting 钉钉群21734177 
+# Author: 钉钉或微信pythontesting 钉钉群21734177
 # CreateDate: 2019-2-21
 
 import argparse
@@ -10,7 +10,7 @@ def output(des, key):
     print()
     print(des, end='')
     for item in zhi_atts[zhi][key]:
-        print(shengxiaos[item], end='')       
+        print(shengxiaos[item], end='')
 
 description = '''
 '''
@@ -28,24 +28,24 @@ else:
     print("你的生肖是：", options.shengxiao)
     zhi = shengxiaos.inverse[options.shengxiao]
     print("你的年支是：", zhi)
-    print("="*80) 
-    print("合生肖是合八字的一小部分，有一定参考意义，但是不是全部。") 
-    print("合婚请以八字为准，技术支持：钉钉或微信pythontesting") 
-    print("以下为相合的生肖：") 
-    print("="*80) 
-    output("与你三合的生肖：", '合')  
-    output("与你六合的生肖：", '六')      
+    print("="*80)
+    print("合生肖是合八字的一小部分，有一定参考意义，但是不是全部。")
+    print("合婚请以八字为准。")
+    print("以下为相合的生肖：")
+    print("="*80)
+    output("与你三合的生肖：", '合')
+    output("与你六合的生肖：", '六')
     output("与你三会的生肖：", '会')
     print()
-    print("="*80) 
-    print("以下为不合的生肖：") 
-    print("="*80)     
-    output("与你相冲的生肖：", '冲')  
+    print("="*80)
+    print("以下为不合的生肖：")
+    print("="*80)
+    output("与你相冲的生肖：", '冲')
     output("你刑的生肖：", '刑')
-    output("被你刑的生肖：", '被刑') 
-    output("与你相害的生肖：", '害')     
-    output("与你相破的生肖：", '破') 
+    output("被你刑的生肖：", '被刑')
+    output("与你相害的生肖：", '害')
+    output("与你相破的生肖：", '破')
     print()
-    print("="*80) 
-    print("如果生肖同时在你的合与不合中，则做加减即可。") 
-    print("比如猪对于虎，有一个相破，有一六合，抵消就为平性。") 
+    print("="*80)
+    print("如果生肖同时在你的合与不合中，则做加减即可。")
+    print("比如猪对于虎，有一个相破，有一六合，抵消就为平性。")
