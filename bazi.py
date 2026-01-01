@@ -2676,7 +2676,7 @@ key = '帝' if Gan.index(me) % 2 == 0 else '冠'
 
 if ten_deities[me].inverse[key] in zhis:
     print('\n羊刃:', me, ten_deities[me].inverse[key])
-    print('======================参考：https://www.jianshu.com/p/c503f7b3ed04')
+    print('======================')
     if ten_deities[me].inverse['冠']:
         print('羊刃重重又见禄，富贵饶金玉。 官、印相助福相资。')
     else:
