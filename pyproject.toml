@@ -1,0 +1,10 @@
+[project]
+name = "bz"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "bidict>=0.23.1",
+    "colorama>=0.4.6",
+    "lunar-python>=1.4.8",
+    "sxtwl>=2.0.7",
+]
