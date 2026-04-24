@@ -2,30 +2,28 @@
 # Author: 钉钉或微信pythontesting 钉钉群21734177
 # CreateDate: 2019-2-21
 
-from datas import *
-from ganzhi import *
+import datas
+import ganzhi
 
 
 def check_gan(gan, gans):
     result = ''
-    if ten_deities[gan]['合'] in gans:
-        result += '合' + ten_deities[gan]['合']
-    if ten_deities[gan]['冲'] in gans:
-        result += '冲' + ten_deities[gan]['冲']
+    if ganzhi.ten_deities[gan]['合'] in gans:
+        result += '合' + ganzhi.ten_deities[gan]['合']
+    if ganzhi.ten_deities[gan]['冲'] in gans:
+        result += '冲' + ganzhi.ten_deities[gan]['冲']
     return result
 
 
 def yinyang(item):
-    if item in Gan:
-        return '＋' if Gan.index(item) % 2 == 0 else '－'
+    if item in ganzhi.Gan:
+        return '＋' if ganzhi.Gan.index(item) % 2 == 0 else '－'
     else:
-        return '＋' if Zhi.index(item) % 2 == 0 else '－'
+        return '＋' if ganzhi.Zhi.index(item) % 2 == 0 else '－'
 
 
 def yinyangs(zhis):
-    result = []
-    for item in zhis:
-        result.append(yinyang(item))
+    result = [yinyang(item) for item in zhis]
     if set(result) == set('＋'):
         print('四柱全阳')
     if set(result) == set('－'):
@@ -33,7 +31,7 @@ def yinyangs(zhis):
 
 
 def get_empty(zhu, zhi):
-    empty = empties[zhu]
+    empty = datas.empties[zhu]
     if zhi in empty:
         return '空'
     return ''
@@ -41,8 +39,8 @@ def get_empty(zhu, zhi):
 
 def get_zhi_detail(zhi, me, multi=1):
     out = ''
-    for gan in zhi5[zhi]:
-        out = out + f'{gan}{gan5[gan]}{zhi5[zhi][gan] * multi}{ten_deities[me][gan]} '
+    for gan in ganzhi.zhi5[zhi]:
+        out = out + f'{gan}{ganzhi.gan5[gan]}{ganzhi.zhi5[zhi][gan] * multi}{ganzhi.ten_deities[me][gan]} '
     return out
 
 

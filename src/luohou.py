@@ -14,29 +14,29 @@ from ganzhi import Gan, Zhi, datouxiu, get_jizhu, jis, xiaotouxiu, zhi_atts, zhi
 from lunar_python import Lunar
 
 
-def get_hou(d, xiazhi, dongzhi):
+def get_hou(d, xiazhi, dongzhi):  # noqa: C901
     cal_day = sxtwl.fromSolar(d.year, d.month, d.day)
     lunar = Lunar.fromYmd(cal_day.getLunarYear(), cal_day.getLunarMonth(), cal_day.getLunarDay())
-    ba = lunar.getEightChar()
-    yun = ba.getYun(1)
+    # ba = lunar.getEightChar()
+    # yun = ba.getYun(1)
 
     # 计算甲干相合
-    gz = cal_day.getHourGZ(10)
-    yTG = cal_day.getYearGZ()
-    mTG = cal_day.getMonthGZ()
-    dTG = cal_day.getDayGZ()
+    # gz = cal_day.getHourGZ(10)
+    y_tg = cal_day.getYearGZ()
+    m_tg = cal_day.getMonthGZ()
+    d_tg = cal_day.getDayGZ()
 
-    gans = Gans(year=Gan[yTG.tg], month=Gan[mTG.tg], day=Gan[dTG.tg])
-    zhis = Zhis(year=Zhi[yTG.dz], month=Zhi[mTG.dz], day=Zhi[dTG.dz])
+    gans = Gans(year=Gan[y_tg.tg], month=Gan[m_tg.tg], day=Gan[d_tg.tg])
+    zhis = Zhis(year=Zhi[y_tg.dz], month=Zhi[m_tg.dz], day=Zhi[d_tg.dz])
 
     print('公历:', end='')
     print(f'{d.year}年{d.month}月{d.day}日', end='')
 
-    Lleap = '闰' if cal_day.isLunarLeap() else ''
+    lleap = '闰' if cal_day.isLunarLeap() else ''
     print('\t农:', end='')
-    print(f'{cal_day.getLunarYear()}年{Lleap}{cal_day.getLunarMonth()}月{cal_day.getLunarDay()}日  ', end='')
+    print(f'{cal_day.getLunarYear()}年{lleap}{cal_day.getLunarMonth()}月{cal_day.getLunarDay()}日  ', end='')
     print(' ', end='')
-    print(''.join([''.join(item) for item in zip(gans, zhis)]), end='')
+    print(''.join([''.join(item) for item in zip(gans, zhis, strict=False)]), end='')
 
     print('\t杀:', end='')
     for item in shi_hous[zhis[2]]:
@@ -52,7 +52,7 @@ def get_hou(d, xiazhi, dongzhi):
 
     if day_ganzhi in tuple(ji_hous.values()):
         birthday = d
-        for i in range(30):
+        for _ in range(30):
             day_ = sxtwl.fromSolar(birthday.year, birthday.month, birthday.day)
             if day_.hasJieQi():
                 ji = jis[(day_.getJieQi() + 3) // 6]
@@ -63,9 +63,9 @@ def get_hou(d, xiazhi, dongzhi):
             print(f' \t季猴:{ji}季{ji_hous[ji]}日', end=' ')
 
     if d >= xiazhi and d < dongzhi:
-        items = shi_feixings2[Zhi[dTG.dz]]
+        items = shi_feixings2[Zhi[d_tg.dz]]
     else:
-        items = shi_feixings1[Zhi[dTG.dz]]
+        items = shi_feixings1[Zhi[d_tg.dz]]
     print()
     print(' ' * 90, lunar.getDayNineStar(), end='')
     for item in Zhi:
@@ -381,13 +381,13 @@ else:
     d = datetime.datetime.today()
 
 cal_day = sxtwl.fromSolar(d.year, d.month, d.day)
-yTG = cal_day.getYearGZ()
-mTG = cal_day.getMonthGZ()
-dTG = cal_day.getDayGZ()
+y_tg = cal_day.getYearGZ()
+m_tg = cal_day.getMonthGZ()
+d_tg = cal_day.getDayGZ()
 
 
-gans = Gans(year=Gan[yTG.tg], month=Gan[mTG.tg], day=Gan[dTG.tg])
-zhis = Zhis(year=Zhi[yTG.dz], month=Zhi[mTG.dz], day=Zhi[dTG.dz])
+gans = Gans(year=Gan[y_tg.tg], month=Gan[m_tg.tg], day=Gan[d_tg.tg])
+zhis = Zhis(year=Zhi[y_tg.dz], month=Zhi[m_tg.dz], day=Zhi[d_tg.dz])
 mountains[zhis.year] += ' 太岁'
 mountains[zhi_atts[zhis.year]['冲']] += ' 岁破'
 
@@ -432,13 +432,13 @@ print(
 print('-' * 120)
 
 print('月份九宫飞星', end=' ')
-items = month_feixings[Zhi[yTG.dz]]
+items = month_feixings[Zhi[y_tg.dz]]
 for i in range(1, 13):
     print(i, items[i], end=' ')
 print()
-year_yas = get_jizhu(Gan[yTG.tg], Zhi[yTG.dz])
+year_yas = get_jizhu(Gan[y_tg.tg], Zhi[y_tg.dz])
 print('太岁压祭主', year_yas)
-day_yas = get_jizhu(Gan[dTG.tg], Zhi[dTG.dz])
+day_yas = get_jizhu(Gan[d_tg.tg], Zhi[d_tg.dz])
 print('日压祭主', day_yas)
 print('-' * 120)
 

@@ -4,6 +4,7 @@
 import datetime
 from collections import OrderedDict
 
+import sxtwl
 from bidict import bidict
 
 Gan = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸']
@@ -193,7 +194,7 @@ zhi5_list = {
 }
 
 ShX = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪']
-numCn = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+num_cn = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 Week = ['日', '一', '二', '三', '四', '五', '六']
 jqmc = [
     '冬至',
@@ -1057,18 +1058,16 @@ zhi3 = {
 }
 
 
-def getGZ(gzStr):
-    import sxtwl
-
+def get_gz(gz_str):
     tg = -1
     dz = -1
     for i, v in enumerate(Gan):
-        if gzStr[0] == v:
+        if gz_str[0] == v:
             tg = i
             break
 
     for i, v in enumerate(Zhi):
-        if gzStr[1] == v:
+        if gz_str[1] == v:
             dz = i
             break
     return sxtwl.GZ(tg, dz)

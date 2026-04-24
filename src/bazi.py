@@ -6,8 +6,10 @@ import argparse
 import collections
 import datetime
 
+import sxtwl
 from common import *
 from datas import *
+from ganzhi import *
 from lunar_python import Lunar, Solar
 from sizi import summarys
 from yue import months
@@ -149,15 +151,13 @@ Zhis = collections.namedtuple('Zhis', 'year month day time')
 print('-' * 120)
 
 if options.b:
-    import sxtwl
-
     gans = Gans(year=options.year[0], month=options.month[0], day=options.day[0], time=options.time[0])
     zhis = Gans(year=options.year[1], month=options.month[1], day=options.day[1], time=options.time[1])
     jds = sxtwl.siZhu2Year(
-        getGZ(options.year),
-        getGZ(options.month),
-        getGZ(options.day),
-        getGZ(options.time),
+        get_gz(options.year),
+        get_gz(options.month),
+        get_gz(options.day),
+        get_gz(options.time),
         options.start,
         int(options.end),
     )

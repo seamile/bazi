@@ -16,7 +16,7 @@ parser.add_argument(
 options = parser.parse_args()
 
 result = ''
-for item in zip(options.gans, options.zhis):
+for item in zip(options.gans, options.zhis, strict=False):
     result = result + ''.join(item) + ' '
 
 # subprocess.call("cls", shell=True)
