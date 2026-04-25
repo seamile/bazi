@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from .data_datas import empties
-from .data_ganzhi import (
+from .data.datas import empties
+from .data.ganzhi import (
     Gan,
     Zhi,
     gan5,
@@ -11,6 +11,8 @@ from .data_ganzhi import (
     gong_he,
     ten_deities,
     zhi5,
+    zhi5_list,
+    zhi_atts,
 )
 
 
@@ -54,8 +56,6 @@ def get_gen(gan: str, zhis: tuple | list) -> dict:  # noqa: C901
 
     返回 {"强": [...], "中": [...], "弱": [...], "text": "..."} 或 {"无根": True}
     """
-    from .data_ganzhi import zhi5_list
-
     zhus = []
     zhongs = []
     weis = []
@@ -205,8 +205,6 @@ def calc_gan_he_list(gans: tuple | list) -> list[bool]:
 
 def calc_zhi_6he(zhis: tuple | list) -> list[bool]:
     """计算地支六合（相邻才算）。"""
-    from .data_ganzhi import zhi_atts
-
     result = [False, False, False, False]
     for i in range(3):
         if zhi_atts[zhis[i]]['六'] == zhis[i + 1]:
@@ -216,8 +214,6 @@ def calc_zhi_6he(zhis: tuple | list) -> list[bool]:
 
 def calc_zhi_6chong(zhis: tuple | list) -> list[bool]:
     """计算地支六冲（相邻才算）。"""
-    from .data_ganzhi import zhi_atts
-
     result = [False, False, False, False]
     for i in range(3):
         if zhi_atts[zhis[i]]['冲'] == zhis[i + 1]:
@@ -227,8 +223,6 @@ def calc_zhi_6chong(zhis: tuple | list) -> list[bool]:
 
 def calc_zhi_xing(zhis: tuple | list) -> list[bool]:
     """计算地支刑（相邻才算）。"""
-    from .data_ganzhi import zhi_atts
-
     result = [False, False, False, False]
     for i in range(3):
         if zhi_atts[zhis[i]]['刑'] == zhis[i + 1] or zhi_atts[zhis[i + 1]]['刑'] == zhis[i]:

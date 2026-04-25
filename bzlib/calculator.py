@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from collections import OrderedDict
 
+from bidict import bidict
 from lunar_python import Lunar, Solar
 
-from .data_datas import nayins, xiuqius
-from .data_ganzhi import (
+from .data.datas import nayins, xiuqius
+from .data.ganzhi import (
     Gan,
     gan5,
     gan_zangs,
@@ -377,8 +378,6 @@ class Calculator:
 
     def get_liuqin(self) -> dict:
         """获取六亲数据。"""
-        from bidict import bidict
-
         is_female = self.is_female
         liuqins = bidict({
             '才': '父亲',

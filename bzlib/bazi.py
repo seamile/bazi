@@ -12,6 +12,7 @@ from .calculator import (
     create_from_lunar,
     create_from_solar,
 )
+from .data.datas import minggongs
 from .dayun import DaYunCalculator
 from .reference import ReferenceTexts
 from .shensha import ShenShaCalculator
@@ -208,8 +209,6 @@ class BaZi:
                 'day': self._lunar.getDay(),
             }
             # 命宫、胎元、身宫
-            from .data_datas import minggongs
-
             if self._ba:
                 mg = self._ba.getMingGong()
                 result['ming_gong'] = mg

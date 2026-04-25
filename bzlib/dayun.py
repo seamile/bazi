@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from .data_datas import nayins
-from .data_ganzhi import (
+from .data.datas import day_shens, g_shens, nayins, year_shens
+from .data.ganzhi import (
     Zhi,
     gong_he,
     ten_deities,
@@ -218,8 +218,6 @@ class DaYunCalculator:
 
     def _calc_shens_for_extra(self, gan_: str, zhi_: str) -> list[str]:
         """为大运/流年计算神煞（简化版）。"""
-        from .data_datas import day_shens, g_shens, year_shens
-
         result = []
         year_zhi = self.zhis[0]
         day_zhi = self.zhis[2]

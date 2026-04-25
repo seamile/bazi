@@ -1,6 +1,8 @@
-#!/usr/bin/env python3
-# Author: 钉钉或微信pythontesting 钉钉群21734177 技术支持qq群：630011153 144081101
-# CreateDate: 2019-2-21
+"""
+干支基础数据定义。
+包含天干地支列表、五行属性、藏干、十神映射、温湿系数等。
+"""
+
 import datetime
 from collections import OrderedDict
 

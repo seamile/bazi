@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .data_datas import (
+from .data.datas import (
     ges,
     jianlu_desc,
     jianlus,
@@ -18,7 +18,7 @@ from .data_datas import (
     wenxing,
     yutangs,
 )
-from .data_ganzhi import (
+from .data.ganzhi import (
     Gan,
     Zhi,
     gan3,

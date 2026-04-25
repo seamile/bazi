@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
-# Author: 钉钉或微信pythontesting 钉钉群21734177
-# CreateDate: 2019-2-21
-
+"""
+基础命理数据表。
+包含星宿、纳音、空亡、神煞定义等静态数据。
+"""
 
 xingxius = {
     0: ('角', ''),
