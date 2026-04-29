@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from .data.datas import (
+    SHEN_SHA_INFO,
     day_shens,
     g_shens,
     month_shens,
-    shens_infos,
     year_shens,
 )
 
@@ -57,7 +57,7 @@ class ShenShaCalculator:
                         'name': shen_name,
                         'position': positions[seq],
                         'zhi': zhi,
-                        'info': shens_infos.get(shen_name, ''),
+                        'info': SHEN_SHA_INFO.get(shen_name, ''),
                     })
         return items
 
@@ -83,7 +83,7 @@ class ShenShaCalculator:
                 items.append({
                     'name': shen_name,
                     'matched': matched_positions,
-                    'info': shens_infos.get(shen_name, ''),
+                    'info': SHEN_SHA_INFO.get(shen_name, ''),
                 })
         return items
 
@@ -103,7 +103,7 @@ class ShenShaCalculator:
                         'name': shen_name,
                         'position': positions[seq],
                         'zhi': zhi,
-                        'info': shens_infos.get(shen_name, ''),
+                        'info': SHEN_SHA_INFO.get(shen_name, ''),
                     })
         return items
 
@@ -126,7 +126,7 @@ class ShenShaCalculator:
                 items.append({
                     'name': shen_name,
                     'positions': matched_positions,
-                    'info': shens_infos.get(shen_name, ''),
+                    'info': SHEN_SHA_INFO.get(shen_name, ''),
                 })
         return items
 

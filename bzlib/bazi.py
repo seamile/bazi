@@ -12,7 +12,7 @@ from .calculator import (
     create_from_lunar,
     create_from_solar,
 )
-from .data.datas import minggongs
+from .data.datas import MING_GONG
 from .dayun import DaYunCalculator
 from .reference import ReferenceTexts
 from .shensha import ShenShaCalculator
@@ -212,7 +212,7 @@ class BaZi:
             if self._ba:
                 mg = self._ba.getMingGong()
                 result['ming_gong'] = mg
-                result['ming_gong_desc'] = minggongs.get(mg[1], '')
+                result['ming_gong_desc'] = MING_GONG.get(mg[1], '')
                 result['tai_yuan'] = self._ba.getTaiYuan()
                 result['shen_gong'] = self._ba.getShenGong()
 

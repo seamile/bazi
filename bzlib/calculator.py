@@ -7,18 +7,18 @@ from collections import OrderedDict
 from bidict import bidict
 from lunar_python import Lunar, Solar
 
-from .data.datas import nayins, xiuqius
+from .data.datas import NA_YIN, XIU_QIU
 from .data.ganzhi import (
-    Gan,
-    gan5,
-    gan_zangs,
-    relations,
-    temps,
-    ten_deities,
-    zhi5,
-    zhi_atts,
-    zhi_wuhangs,
-    zhi_zangs,
+    CANG_GAN,
+    GAN_5,
+    NEI_ZANG_GAN,
+    NEI_ZANG_ZHI,
+    RELATION,
+    SHI_SHEN,
+    TEMPERATURE,
+    TIAN_GAN,
+    WU_XING_ZHI,
+    ZHI_ATTR,
 )
 from .utils import (
     calc_dayun_ganzhi,
@@ -98,13 +98,13 @@ class Calculator:
             if seq == 2:
                 self.gan_shens.append('--')
             else:
-                self.gan_shens.append(ten_deities[me][item])
+                self.gan_shens.append(SHI_SHEN[me][item])
 
         # 地支主气十神
         self.zhi_shens = []
         for item in self.zhis:
-            d = zhi5[item]
-            self.zhi_shens.append(ten_deities[me][max(d, key=d.get)])
+            d = CANG_GAN[item]
+            self.zhi_shens.append(SHI_SHEN[me][max(d, key=d.get)])
 
         self.shens = self.gan_shens + self.zhi_shens
 
@@ -113,17 +113,17 @@ class Calculator:
         # 地支所有神（每柱字符串）
         self.zhi_shen3 = []
         for item in self.zhis:
-            d = zhi5[item]
+            d = CANG_GAN[item]
             tmp = ''
             for item2 in d:
-                self.zhi_shens2.append(ten_deities[me][item2])
-                tmp += ten_deities[me][item2]
+                self.zhi_shens2.append(SHI_SHEN[me][item2])
+                tmp += SHI_SHEN[me][item2]
             self.zhi_shen3.append(tmp)
 
         self.shens2 = self.gan_shens + self.zhi_shens2
 
         # 十二长生状态
-        self.statuses = [ten_deities[me][item] for item in self.zhis]
+        self.statuses = [SHI_SHEN[me][item] for item in self.zhis]
 
         # 十神柱组合
         self.shen_zhus = list(
@@ -149,14 +149,14 @@ class Calculator:
         }
 
         for item in self.gans:
-            self.scores[gan5[item]] += 5
+            self.scores[GAN_5[item]] += 5
             self.gan_scores[item] += 5
 
         # 地支 + 月支加倍
         for item in [*list(self.zhis), self.zhis[1]]:
-            for gan in zhi5[item]:
-                self.scores[gan5[gan]] += zhi5[item][gan]
-                self.gan_scores[gan] += zhi5[item][gan]
+            for gan in CANG_GAN[item]:
+                self.scores[GAN_5[gan]] += CANG_GAN[item][gan]
+                self.gan_scores[gan] += CANG_GAN[item][gan]
 
     # ─── 强弱判断 ───────────────────────────────────────────
 
@@ -167,8 +167,8 @@ class Calculator:
         self.weak = True
         self.me_status = []
         for item in self.zhis:
-            self.me_status.append(ten_deities[me][item])
-            if ten_deities[me][item] in ('长', '帝', '建'):
+            self.me_status.append(SHI_SHEN[me][item])
+            if SHI_SHEN[me][item] in ('长', '帝', '建'):
                 self.weak = False
 
         if self.weak:
@@ -176,7 +176,7 @@ class Calculator:
                 self.weak = False
 
         # 网上的计算
-        me_attrs_ = ten_deities[me].inverse
+        me_attrs_ = SHI_SHEN[me].inverse
         self.strong = (
             self.gan_scores[me_attrs_['比']]
             + self.gan_scores[me_attrs_['劫']]
@@ -200,14 +200,14 @@ class Calculator:
     def _calc_temps(self):
         """计算温湿度。"""
         self.temps_scores = (
-            temps[self.gans[0]]
-            + temps[self.gans[1]]
-            + temps[self.me]
-            + temps[self.gans[3]]
-            + temps[self.zhis[0]]
-            + temps[self.zhis[1]] * 2
-            + temps[self.zhis[2]]
-            + temps[self.zhis[3]]
+            TEMPERATURE[self.gans[0]]
+            + TEMPERATURE[self.gans[1]]
+            + TEMPERATURE[self.me]
+            + TEMPERATURE[self.gans[3]]
+            + TEMPERATURE[self.zhis[0]]
+            + TEMPERATURE[self.zhis[1]] * 2
+            + TEMPERATURE[self.zhis[2]]
+            + TEMPERATURE[self.zhis[3]]
         )
 
     # ─── 地支关系计算 ───────────────────────────────────────
@@ -239,16 +239,16 @@ class Calculator:
             ('心包', 0),
         ])
         for item in self.gans:
-            self.zangs[gan_zangs[item]] += 1
+            self.zangs[NEI_ZANG_GAN[item]] += 1
         for item in self.zhis:
-            self.zangs[zhi_zangs[item]] += 1
+            self.zangs[NEI_ZANG_ZHI[item]] += 1
 
     # ─── 各种特殊计算 ───────────────────────────────────────
 
     def _calc_lu_and_special(self):
         """计算禄、库、各种特殊天干。"""
         me = self.me
-        inv = ten_deities[me].inverse
+        inv = SHI_SHEN[me].inverse
 
         self.me_lu = inv['建']
         self.me_jue = inv['绝']
@@ -256,38 +256,38 @@ class Calculator:
         self.me_di = inv['帝']
 
         self.shang = inv['伤']
-        self.shang_lu = ten_deities[self.shang].inverse['建']
-        self.shang_di = ten_deities[self.shang].inverse['帝']
+        self.shang_lu = SHI_SHEN[self.shang].inverse['建']
+        self.shang_di = SHI_SHEN[self.shang].inverse['帝']
 
         self.yin = inv['印']
-        self.yin_lu = ten_deities[self.yin].inverse['建']
+        self.yin_lu = SHI_SHEN[self.yin].inverse['建']
         self.xiao = inv['枭']
-        self.xiao_lu = ten_deities[self.xiao].inverse['建']
+        self.xiao_lu = SHI_SHEN[self.xiao].inverse['建']
 
         self.cai = inv['财']
-        self.cai_lu = ten_deities[self.cai].inverse['建']
-        self.cai_di = ten_deities[self.cai].inverse['帝']
+        self.cai_lu = SHI_SHEN[self.cai].inverse['建']
+        self.cai_di = SHI_SHEN[self.cai].inverse['帝']
         self.piancai = inv['才']
-        self.piancai_lu = ten_deities[self.piancai].inverse['建']
-        self.piancai_di = ten_deities[self.piancai].inverse['帝']
+        self.piancai_lu = SHI_SHEN[self.piancai].inverse['建']
+        self.piancai_di = SHI_SHEN[self.piancai].inverse['帝']
 
         self.guan = inv['官']
-        self.guan_lu = ten_deities[self.guan].inverse['建']
-        self.guan_di = ten_deities[self.guan].inverse['帝']
+        self.guan_lu = SHI_SHEN[self.guan].inverse['建']
+        self.guan_di = SHI_SHEN[self.guan].inverse['帝']
         self.sha = inv['杀']
-        self.sha_lu = ten_deities[self.sha].inverse['建']
-        self.sha_di = ten_deities[self.sha].inverse['帝']
+        self.sha_lu = SHI_SHEN[self.sha].inverse['建']
+        self.sha_di = SHI_SHEN[self.sha].inverse['帝']
 
         self.jie = inv['劫']
         self.shi = inv['食']
-        self.shi_lu = ten_deities[self.shi].inverse['建']
-        self.shi_di = ten_deities[self.shi].inverse['帝']
+        self.shi_lu = SHI_SHEN[self.shi].inverse['建']
+        self.shi_di = SHI_SHEN[self.shi].inverse['帝']
 
-        self.me_ku = ten_deities[me]['库'][0]
-        self.cai_ku = ten_deities[self.cai]['库'][0]
-        self.guan_ku = ten_deities[self.guan]['库'][0]
-        self.yin_ku = ten_deities[self.yin]['库'][0]
-        self.shi_ku = ten_deities[self.shi]['库'][0]
+        self.me_ku = SHI_SHEN[me]['库'][0]
+        self.cai_ku = SHI_SHEN[self.cai]['库'][0]
+        self.guan_ku = SHI_SHEN[self.guan]['库'][0]
+        self.yin_ku = SHI_SHEN[self.yin]['库'][0]
+        self.shi_ku = SHI_SHEN[self.shi]['库'][0]
 
     # ─── 数据导出方法 ───────────────────────────────────────
 
@@ -302,19 +302,19 @@ class Calculator:
         canggan = [
             {
                 'gan': cg,
-                'wuxing': gan5[cg],
-                'shishen': ten_deities[me][cg],
-                'score': zhi5[zhi][cg],
+                'wuxing': GAN_5[cg],
+                'shishen': SHI_SHEN[me][cg],
+                'score': CANG_GAN[zhi][cg],
             }
-            for cg in zhi5[zhi]
+            for cg in CANG_GAN[zhi]
         ]
 
         # 地支关系
         zhi_rels = {}
         others = list(self.zhis[:seq]) + list(self.zhis[seq + 1 :])
-        for type_ in zhi_atts[zhi]:
+        for type_ in ZHI_ATTR[zhi]:
             matched = []
-            target = zhi_atts[zhi][type_]
+            target = ZHI_ATTR[zhi][type_]
             if isinstance(target, str):
                 if target in others:
                     matched.append(target)
@@ -327,7 +327,7 @@ class Calculator:
         cross_shens = {}
         for i, g in enumerate(self.gans):
             pos = ['年', '月', '日', '时'][i]
-            cross_shens[pos] = ten_deities[g][zhi]
+            cross_shens[pos] = SHI_SHEN[g][zhi]
 
         return {
             'position': ['年', '月', '日', '时'][seq],
@@ -335,30 +335,30 @@ class Calculator:
             'zhi': zhi,
             'gan_yinyang': yinyang(gan),
             'zhi_yinyang': yinyang(zhi),
-            'gan_wuxing': gan5[gan],
-            'zhi_wuxing': zhi_wuhangs[zhi],
+            'gan_wuxing': GAN_5[gan],
+            'zhi_wuxing': WU_XING_ZHI[zhi],
             'gan_shishen': self.gan_shens[seq],
             'zhi_shishen': self.zhi_shens[seq],
             'zhi_all_shishen': self.zhi_shen3[seq],
-            'twelve_stage': ten_deities[me][zhi],
+            'twelve_stage': SHI_SHEN[me][zhi],
             'gan_relations': check_gan(gan, self.gans),
             'zhi_relations': zhi_rels,
             'cross_shishen': cross_shens,
             'canggan': canggan,
-            'nayin': nayins.get((gan, zhi), ''),
+            'nayin': NA_YIN.get((gan, zhi), ''),
             'kong_wang': is_kong_wang(day_zhu, zhi) if seq != 2 else False,
             'gen': get_gen(gan, self.zhis),
-            'ganzhi_relation': relations.get(
-                (gan5[gan], zhi_wuhangs[zhi]),
+            'ganzhi_relation': RELATION.get(
+                (GAN_5[gan], WU_XING_ZHI[zhi]),
                 '',
             ),
             'ganzhi_he': gan_zhi_he(gan, zhi),
-            'temps': {'gan': temps[gan], 'zhi': temps[zhi]},
+            'TEMPERATURE': {'gan': TEMPERATURE[gan], 'zhi': TEMPERATURE[zhi]},
         }
 
     def get_siling(self) -> dict:
         """获取四令信息。"""
-        return xiuqius.get(self.zhis[1], {})
+        return XIU_QIU.get(self.zhis[1], {})
 
     def get_wuxing_scores(self) -> dict:
         """获取五行分数详情。"""
@@ -393,9 +393,9 @@ class Calculator:
         })
 
         result = {}
-        for item in Gan:
-            shishen = ten_deities[self.me][item]
-            statuses = [ten_deities[item][z] for z in self.zhis]
+        for item in TIAN_GAN:
+            shishen = SHI_SHEN[self.me][item]
+            statuses = [SHI_SHEN[item][z] for z in self.zhis]
             result[item] = {
                 'shishen': shishen,
                 'liuqin': liuqins[shishen],

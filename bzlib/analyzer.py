@@ -3,35 +3,37 @@
 from __future__ import annotations
 
 from .data.datas import (
-    ges,
-    jianlu_desc,
-    jianlus,
-    jinbuhuan,
-    jins,
-    lu_types,
-    nayins,
-    rizhus,
+    GE_JU,
+    JIAN_LU,
+    JIAN_LU_DESC,
+    JIN_BU_HUAN,
+    JIN_BU_HUAN_DESC,
+    LU,
+    NA_YIN,
+    RI_ZHU,
+    TIAN_YI,
+    TIAN_YIN,
+    TIAO_HOU,
+    WEN_XING,
+    YU_TANG,
     self_zuo,
-    tianyin,
-    tianyis,
-    tiaohous,
-    wenxing,
-    yutangs,
 )
 from .data.ganzhi import (
-    Gan,
-    Zhi,
-    gan3,
-    gan4,
-    gan_desc,
-    gong_he,
-    gong_hui,
-    ju,
-    ten_deities,
-    wuhangs,
-    zhi3,
-    zhi5,
-    zhi_desc,
+    CANG_GAN,
+    DI_ZHI,
+    GAN_3,
+    GAN_4,
+    GAN_DESC,
+    GONG_HE,
+    SAN_HE_JU,
+    SAN_HUI_GONG,
+    SHI_SHEN,
+    TIAN_GAN,
+    WU_XING,
+    ZHI_3,
+    ZHI_DESC,
+    ZHI_HES,
+    ZHI_HUIS,
 )
 from .utils import (
     check_gong,
@@ -81,13 +83,13 @@ class Analyzer:
         zhis = self.zhis
         gans = self.gans
 
-        if (me, zhis[1]) in jianlus:
+        if (me, zhis[1]) in JIAN_LU:
             return '建'
         if (me, zhis[1]) in (('甲', '卯'), ('庚', '酉'), ('壬', '子')):
             return '月刃'
 
         zhi = zhis[1]
-        if zhi in wuhangs['土'] or (me, zhis[1]) in (
+        if zhi in WU_XING['土'] or (me, zhis[1]) in (
             ('乙', '寅'),
             ('丙', '午'),
             ('丁', '巳'),
@@ -96,24 +98,24 @@ class Analyzer:
             ('辛', '申'),
             ('癸', '亥'),
         ):
-            for item in zhi5[zhi]:
+            for item in CANG_GAN[zhi]:
                 if item in gans[:2] + gans[3:]:
-                    return ten_deities[me][item]
+                    return SHI_SHEN[me][item]
         else:
-            d = zhi5[zhi]
-            return ten_deities[me][max(d, key=d.get)]
+            d = CANG_GAN[zhi]
+            return SHI_SHEN[me][max(d, key=d.get)]
         return ''
 
     def _get_tiaohou(self) -> str:
         key = self.me + self.zhis[1]
-        return tiaohous.get(key, '')
+        return TIAO_HOU.get(key, '')
 
     def _get_jinbuhuan(self) -> list[str]:
         result = []
         key = self.me + self.zhis[1]
-        if key in jinbuhuan:
-            result.append(jinbuhuan[key])
-        for jin_key, jin_val in jins.items():
+        if key in JIN_BU_HUAN:
+            result.append(JIN_BU_HUAN[key])
+        for jin_key, jin_val in JIN_BU_HUAN_DESC.items():
             if jin_key == self.me + self.zhis[1]:
                 result.append(jin_val)
         return result
@@ -121,15 +123,22 @@ class Analyzer:
     def _get_ge_list(self) -> list[str]:
         result = []
         key = self.me + self.zhis[1]
-        if key in ges:
-            result.append(ges[key])
+        if key in GE_JU:
+            result.append(GE_JU[key])
         return result
 
     def _get_ju(self) -> list[str]:
         result = []
-        for key, val in ju.items():
-            if set(key).issubset(set(self.zhis)):
-                result.append(val)
+        zhis_set = set(self.zhis) | set(getattr(self.calc, 'gongs', []))
+
+        # 检查三合局和三会局
+        for items in (ZHI_HES, ZHI_HUIS):
+            for combination, element in items.items():
+                if set(combination).issubset(zhis_set):
+                    # 利用 SHI_SHEN 的反查功能获取关系键（如 '本', '被克' 等）
+                    rel_key = SHI_SHEN[self.me].inverse.get(element)
+                    if rel_key in SAN_HE_JU:
+                        result.append(SAN_HE_JU[rel_key])
         return result
 
     def _collect_all_ges(self) -> list[str]:
@@ -271,13 +280,13 @@ class Analyzer:
         result = {}
         # 日柱分析
         day_gz = self.me + self.zhis[2]
-        if day_gz in rizhus:
-            result['日柱'] = [rizhus[day_gz]]
+        if day_gz in RI_ZHU:
+            result['日柱'] = [RI_ZHU[day_gz]]
 
         # 天元坐支
         zuo = []
-        for item in zhi5[self.zhis[2]]:
-            name = ten_deities[self.me][item]
+        for item in CANG_GAN[self.zhis[2]]:
+            name = SHI_SHEN[self.me][item]
             text = self_zuo.get(name, '')
             if text.strip():
                 zuo.append(text.strip())
@@ -285,8 +294,8 @@ class Analyzer:
             result['天元坐支'] = zuo
 
         # 出身
-        cai = ten_deities[self.me].inverse['财']
-        guan = ten_deities[self.me].inverse['官']
+        cai = SHI_SHEN[self.me].inverse['财']
+        guan = SHI_SHEN[self.me].inverse['官']
         births = tuple(self.gans[:2])
         if cai in births and guan in births:
             result['出身'] = ['不错']
@@ -294,23 +303,23 @@ class Analyzer:
             result['出身'] = ['一般']
 
         # 天干描述
-        result['日主特点'] = [gan_desc.get(self.me, '')]
-        result['年支特点'] = [zhi_desc.get(self.zhis[0], '')]
+        result['日主特点'] = [GAN_DESC.get(self.me, '')]
+        result['年支特点'] = [ZHI_DESC.get(self.zhis[0], '')]
 
         # 三字干/四字干/三字支
         gan_t = tuple(self.gans)
-        for item in Gan:
-            if gan_t.count(item) == 3 and item in gan3:
-                result['三字干'] = [f'{item}：{gan3[item]}']
+        for item in TIAN_GAN:
+            if gan_t.count(item) == 3 and item in GAN_3:
+                result['三字干'] = [f'{item}：{GAN_3[item]}']
                 break
-            if gan_t.count(item) == 4 and item in gan4:
-                result['四字干'] = [f'{item}：{gan4[item]}']
+            if gan_t.count(item) == 4 and item in GAN_4:
+                result['四字干'] = [f'{item}：{GAN_4[item]}']
                 break
 
         zhi_t = tuple(self.zhis)
-        for item in Zhi:
-            if zhi_t.count(item) > 2 and item in zhi3:
-                result['三字支'] = [f'{item}：{zhi3[item]}']
+        for item in DI_ZHI:
+            if zhi_t.count(item) > 2 and item in ZHI_3:
+                result['三字支'] = [f'{item}：{ZHI_3[item]}']
                 break
 
         return result
@@ -322,33 +331,33 @@ class Analyzer:
         zhis = self.zhis
 
         # 天乙贵人
-        ty = tianyis.get(me, '')
+        ty = TIAN_YI.get(me, '')
         if ty and ty in zhis:
             result['天乙贵人'] = [ty]
 
         # 玉堂贵人
-        yt = yutangs.get(me, '')
+        yt = YU_TANG.get(me, '')
         if yt and yt in zhis:
             result['玉堂贵人'] = [yt]
 
         # 天罗
-        if nayins.get(self.zhus[0], '')[-1:] == '火':
+        if NA_YIN.get(self.zhus[0], '')[-1:] == '火':
             if zhis[2] in '戌亥':
                 result['天罗'] = [zhis[2]]
 
         # 地网
-        ny = nayins.get(self.zhus[0], '')
+        ny = NA_YIN.get(self.zhus[0], '')
         if ny and ny[-1] in '水土':
             if zhis[2] in '辰巳':
                 result['地网'] = [zhis[2]]
 
         # 文星贵人
-        wx = wenxing.get(me, '')
+        wx = WEN_XING.get(me, '')
         if wx and wx in zhis:
             result['文星贵人'] = [wx]
 
         # 天印贵人
-        tyi = tianyin.get(me, '')
+        tyi = TIAN_YIN.get(me, '')
         if tyi and tyi in zhis:
             result['天印贵人'] = [tyi]
 
@@ -393,16 +402,16 @@ class Analyzer:
 
         # 禄分析
         lu_items = []
-        if me in lu_types:
-            for zhu_tuple, desc in lu_types[me].items():
+        if me in LU:
+            for zhu_tuple, desc in LU[me].items():
                 if zhu_tuple in self.zhus:
                     lu_items.append(f'{"".join(zhu_tuple)}：{desc}')
         if lu_items:
             result['禄'] = lu_items
 
         # 羊刃
-        key = '帝' if Gan.index(me) % 2 == 0 else '冠'
-        yr = ten_deities[me].inverse[key]
+        key = '帝' if TIAN_GAN.index(me) % 2 == 0 else '冠'
+        yr = SHI_SHEN[me].inverse[key]
         if yr in zhis:
             result['羊刃'] = [f'{me} {yr}']
 
@@ -412,20 +421,20 @@ class Analyzer:
         """建禄格信息。"""
         me = self.me
         key = (me, self.zhis[1])
-        if key in jianlus:
+        if key in JIAN_LU:
             return {
-                'desc': jianlu_desc,
-                'detail': jianlus[key],
+                'desc': JIAN_LU_DESC,
+                'detail': JIAN_LU[key],
             }
         return None
 
     def get_gong_analysis(self) -> list[str]:
         """拱合分析。"""
         result = []
-        r = check_gong(self.zhis, 1, 2, self.me, gong_he)
+        r = check_gong(self.zhis, 1, 2, self.me, GONG_HE)
         if r:
             result.append(r.strip())
-        r = check_gong(self.zhis, 1, 2, self.me, gong_hui, '三会拱')
+        r = check_gong(self.zhis, 1, 2, self.me, SAN_HUI_GONG, '三会拱')
         if r:
             result.append(r.strip())
         return result

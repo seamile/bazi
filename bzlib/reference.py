@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from .data.datas import chens, days60, jianchus
-from .data.ganzhi import Zhi
-from .data.sizi import summarys
-from .data.yue import months
+from .data.datas import DAY_60, JIAN_CHU, SHI_CHEN_12
+from .data.ganzhi import DI_ZHI
+from .data.sizi import SUMMARY
+from .data.yue import MONTH
 
 
 class ReferenceTexts:
@@ -28,25 +28,25 @@ class ReferenceTexts:
     def get_days60(self) -> str:
         """六十日用法口诀。"""
         key = self.me + self.zhis[2]
-        return days60.get(key, '')
+        return DAY_60.get(key, '')
 
     def get_qiongtong(self) -> str:
         """穷通宝鉴。"""
         key = self.me + self.zhis[1]
-        return months.get(key, '')
+        return MONTH.get(key, '')
 
     def get_sanming(self) -> str:
         """三命通会。"""
         key = ''.join([self.me, '日', *self.zhus[3]])
-        return summarys.get(key, '')
+        return SUMMARY.get(key, '')
 
     def get_shichen(self) -> str:
         """十二时辰（初中末）出生吉凶。"""
-        return chens.get(self.zhis[3], '')
+        return SHI_CHEN_12.get(self.zhis[3], '')
 
     def get_jianchu(self) -> dict:
         """建除。"""
-        seq = 12 - Zhi.index(self.zhis[1])
-        idx = (Zhi.index(self.zhis[2]) + seq) % 12
-        name, desc = jianchus[idx]
+        seq = 12 - DI_ZHI.index(self.zhis[1])
+        idx = (DI_ZHI.index(self.zhis[2]) + seq) % 12
+        name, desc = JIAN_CHU[idx]
         return {'name': name, 'desc': desc}

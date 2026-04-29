@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from .data.datas import day_shens, g_shens, nayins, year_shens
+from .data.datas import NA_YIN, day_shens, g_shens, year_shens
 from .data.ganzhi import (
-    Zhi,
-    gong_he,
-    ten_deities,
-    zhi5,
-    zhi_atts,
+    CANG_GAN,
+    DI_ZHI,
+    GONG_HE,
+    SHI_SHEN,
+    ZHI_ATTR,
 )
 from .utils import check_gan, is_kong_wang, yinyang
 
@@ -87,13 +87,13 @@ class DaYunCalculator:
         day_zhu = self.zhus[2]
 
         # 地支藏干
-        zhi5_ = [{'gan': gan, 'shishen': ten_deities[me][gan]} for gan in zhi5[zhi_]]
+        zhi5_ = [{'gan': gan, 'shishen': SHI_SHEN[me][gan]} for gan in CANG_GAN[zhi_]]
 
         # 地支关系
         zhi_rels = set()
         for item in self.zhis:
-            for type_ in zhi_atts[zhi_]:
-                target = zhi_atts[zhi_][type_]
+            for type_ in ZHI_ATTR[zhi_]:
+                target = ZHI_ATTR[zhi_][type_]
                 if isinstance(target, str):
                     if item == target:
                         zhi_rels.add(f'{type_}:{item}')
@@ -114,10 +114,10 @@ class DaYunCalculator:
             'ganzhi': gan_ + zhi_,
             'gan': gan_,
             'zhi': zhi_,
-            'gan_shishen': ten_deities[me][gan_],
-            'zhi_shishen': ten_deities[me][zhi_],
+            'gan_shishen': SHI_SHEN[me][gan_],
+            'zhi_shishen': SHI_SHEN[me][zhi_],
             'zhi_canggan': zhi5_,
-            'nayin': nayins.get((gan_, zhi_), ''),
+            'nayin': NA_YIN.get((gan_, zhi_), ''),
             'gan_relations': check_gan(gan_, self.gans),
             'zhi_relations': sorted(zhi_rels),
             'kong_wang': is_kong_wang(day_zhu, zhi_),
@@ -137,15 +137,15 @@ class DaYunCalculator:
         zhi2_ = liunian.getGanZhi()[1]
 
         # 地支藏干
-        zhi6_ = [{'gan': gan, 'shishen': ten_deities[me][gan]} for gan in zhi5[zhi2_]]
+        zhi6_ = [{'gan': gan, 'shishen': SHI_SHEN[me][gan]} for gan in CANG_GAN[zhi2_]]
 
         # 地支关系（与五柱）
         zhi_rels = set()
         for item in zhis2:
-            for type_ in zhi_atts[zhi2_]:
+            for type_ in ZHI_ATTR[zhi2_]:
                 if type_ == '破':
                     continue
-                target = zhi_atts[zhi2_][type_]
+                target = ZHI_ATTR[zhi2_][type_]
                 if isinstance(target, str):
                     if item == target:
                         zhi_rels.add(f'{type_}:{item}')
@@ -162,9 +162,9 @@ class DaYunCalculator:
             for i in range(5):
                 if gan2_ == gans2[i]:
                     zhi1 = zhis2[i]
-                    if zhi1 + zhi2_ in gong_he:
-                        if gong_he[zhi1 + zhi2_] not in self.zhis:
-                            gong_items.append(gong_he[zhi1 + zhi2_])
+                    if zhi1 + zhi2_ in GONG_HE:
+                        if GONG_HE[zhi1 + zhi2_] not in self.zhis:
+                            gong_items.append(GONG_HE[zhi1 + zhi2_])
 
         # 神煞
         shens = self._calc_shens_for_extra(gan2_, zhi2_)
@@ -181,10 +181,10 @@ class DaYunCalculator:
             'ganzhi': gan2_ + zhi2_,
             'gan': gan2_,
             'zhi': zhi2_,
-            'gan_shishen': ten_deities[me][gan2_],
-            'zhi_shishen': ten_deities[me][zhi2_],
+            'gan_shishen': SHI_SHEN[me][gan2_],
+            'zhi_shishen': SHI_SHEN[me][zhi2_],
             'zhi_canggan': zhi6_,
-            'nayin': nayins.get((gan2_, zhi2_), ''),
+            'nayin': NA_YIN.get((gan2_, zhi2_), ''),
             'gan_relations': check_gan(gan2_, gans2),
             'zhi_relations': sorted(zhi_rels),
             'kong_wang': is_kong_wang(day_zhu, zhi2_),
@@ -206,13 +206,13 @@ class DaYunCalculator:
                     break
                 if gan_ == gans[i]:
                     diff = abs(
-                        Zhi.index(zhi_) - Zhi.index(zhis[i]),
+                        DI_ZHI.index(zhi_) - DI_ZHI.index(zhis[i]),
                     )
                     if diff == 2:
-                        mid = Zhi[(Zhi.index(zhi_) + Zhi.index(zhis[i])) // 2]
+                        mid = DI_ZHI[(DI_ZHI.index(zhi_) + DI_ZHI.index(zhis[i])) // 2]
                         jia.append(f'夹：{mid}')
                     if diff == 10:
-                        mid = Zhi[(Zhi.index(zhi_) + Zhi.index(zhis[i])) % 12]
+                        mid = DI_ZHI[(DI_ZHI.index(zhi_) + DI_ZHI.index(zhis[i])) % 12]
                         jia.append(f'夹：{mid}')
         return jia
 
